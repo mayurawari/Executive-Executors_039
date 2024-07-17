@@ -1,32 +1,43 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { IoSearch } from "react-icons/io5";
+import { IoHomeOutline } from "react-icons/io5";
+import { MdOutlineInbox } from "react-icons/md";
 
 const Navbar = () => {
     return (
-        <>
-           <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
-                <Link className="navbar-brand" to="/">Notion</Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                       
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/">Home</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/search">Search</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/index">Index</Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        </>
+        <div>
+
+            <ul style={{ listStyleType: 'none', textAlign: "start" }}>
+                <li>
+
+                    <Link className="navbar-brand" to="/">Notion</Link>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                </li>
+                <li style={{ display: "flex", marginTop: "15px", padding:"10px" }}>
+                    <div style={{ paddingTop: "5px", paddingRight: "5px" }} >
+                        <IoSearch />
+                    </div>
+                    <Link to="/search">Search</Link>
+
+                </li>
+                <li style={{ display: "flex",  padding:"10px" }}>
+                    <div style={{ paddingTop: "5px", paddingRight: "5px" }} >
+                        <IoHomeOutline />
+                    </div>
+                    <Link to="/">Home</Link>
+                </li>
+                
+                <li style={{ display: "flex", padding:"10px" }}>
+                    <div style={{ paddingTop: "5px", paddingRight: "5px" }} >
+                        <MdOutlineInbox />
+                    </div>
+                    <Link to="/index">Index</Link>
+                </li>
+            </ul>
+        </div>
     );
 };
 

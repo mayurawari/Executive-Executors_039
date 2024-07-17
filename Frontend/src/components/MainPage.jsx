@@ -1,11 +1,16 @@
 import React from 'react';
+import { FaBook } from "react-icons/fa";
 
 const MainPage = () => {
     return (
         <div>
+            <div style={{ display: "flex", paddingLeft:"50px" }}>
+                <div style={{fontSize:"16px", padding:"2px"}}>
+                    <FaBook />
+                </div>
 
-            <h6 style={{ marginBottom: "20px", textAlign:"start", paddingLeft:"50px" }}>Learn</h6>
-
+                <h6 style={{ marginBottom: "20px", textAlign: "start" }}> Learn</h6>
+            </div>
             <div id="carouselExample" className="carousel slide">
                 <div className="carousel-inner">
                     <div className="carousel-item active">
