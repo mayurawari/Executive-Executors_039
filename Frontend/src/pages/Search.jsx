@@ -1,10 +1,9 @@
 import React from 'react';
-import SearchModal from '../components/SearchInput';
+import SearchFiltter from '../components/SearchFiltter';
 
 const Search = () => {
-    return <h2>
-        search
-    </h2>;
-};
-
+   return(
+<SearchFiltter></SearchFiltter>
+   )
+}
 export default Search;
