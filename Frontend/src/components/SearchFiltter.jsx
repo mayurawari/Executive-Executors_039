@@ -1,18 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const SearchFiltter = () => {
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
+    const navigate = useNavigate();
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        setShow(false);
+        navigate('/');
+    };
 
     return (
         <div>
-            <Button variant="primary" onClick={handleShow}>
-                Search
-            </Button>
-
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Search</Modal.Title>
@@ -38,4 +38,4 @@ const SearchFiltter = () => {
     );
 };
 
-export default SearchFiltter
+export default SearchFiltter;

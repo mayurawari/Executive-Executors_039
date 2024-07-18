@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import LandingPage from './LandingPage';
+import SearchFiltter from './SearchFiltter';
+import GetStarted from '../pages/GetStarted';
 
 const FrontPage = () => {
     return (
@@ -20,13 +22,18 @@ const FrontPage = () => {
                                 <Link className="nav-link" to="/login">Login</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/" style={{ backgroundColor: "black", color: "white", borderRadius:"7px" }}>Get Notion Free</Link>
+                                <Link className="nav-link" to="/getnotion" style={{ backgroundColor: "black", color: "white", borderRadius: "7px" }}>Get Notion Free</Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            <LandingPage />
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/search" element={<SearchFiltter />} />
+                <Route path="/getnotion" element={<GetStarted />} />
+
+            </Routes>
         </>
     );
 };
