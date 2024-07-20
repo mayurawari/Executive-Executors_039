@@ -1,17 +1,13 @@
 import React from 'react'
 import { Routes, Route } from "react-router-dom"
-import { Home } from '../../pages/Home/Home'
+import { Nav } from '../Navbar/Nav'
+import Footer from '../../pages/Footer/Footer'
 
 export const Mainsection = () => {
   return (
     <>
-    <div className='Navbar'> 
-       
-    </div>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Nav/>
+      <Footer/>
     </>
   )
 }
