@@ -6,8 +6,8 @@ import bodyParser from "body-parser";
 import cors from "cors"
 
 config();
-app.use(cors({origin:process.env.FRONTEND_URL,credentials: true}));
 const app = express();
+app.use(cors({origin:process.env.FRONTEND_URL,credentials: true}));
 const port = process.env.PORT || 8080;
 const url = process.env.DB_URL;
 
