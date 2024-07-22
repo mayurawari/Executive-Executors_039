@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import connecttodb from "./configs/db.js";
 import authRoutes from "./routes/authroute.js";
 import bodyParser from "body-parser";
+import cors from "cors"
 
 config();
 app.use(cors({origin:process.env.FRONTEND_URL,credentials: true}));
