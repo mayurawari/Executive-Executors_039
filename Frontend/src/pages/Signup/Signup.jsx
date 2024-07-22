@@ -9,7 +9,7 @@ export const Signup = () => {
 
   const handleSendOtp = async () => {
     try {
-      await axios.post('http://localhost:9090/api/auth/verify-otp', { email , otp});
+      await axios.post('https://executive-executors-039.onrender.com/api/auth/verify-otp', { email , otp});
       console.log(`Sending OTP to ${email}`);
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -20,7 +20,7 @@ export const Signup = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:9090/api/auth/signup', { username, email, password });
+      await axios.post('https://executive-executors-039.onrender.com/api/auth/signup', { username, email, password });
       console.log('Signup successful');
     } catch (error) {
       console.error("Error signing up:", error);

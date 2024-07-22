@@ -19,7 +19,7 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:9090/api/auth/login', { email, password, otp });
+      const response = await axios.post('https://executive-executors-039.onrender.com/api/auth/login', { email, password, otp });
       console.log('Login successful:', response.data);
     } catch (error) {
       console.error("Error logging in:", error);
