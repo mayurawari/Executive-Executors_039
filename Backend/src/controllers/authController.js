@@ -1,52 +1,78 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const db = require('../configs/sql');
-require("dotenv").config();
+import User from "../models/usermodel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { generateOtp, sendOtp } from "../utils/otputils.js";
 
-exports.register = async (req, res) => {
-  const { username, password,role = 'user' } = req.body;
+export const signup = async (req, res) => {
+    const { username, email, password } = req.body;
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [result] = await db.query('INSERT INTO users (username, password,role) VALUES (?, ?, ?)', [username, hashedPassword,role]);
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ message: "User already exists" });
+        }
 
-    res.status(201).json({ id: result.insertId, username });
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
-};
+        user = new User({ username, email, password });
+        await user.save();
 
-exports.login = async (req, res) => {
-  const { username, password } = req.body;
-  console.log('Login request received:', req.body);
-  try {
-    const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-    const user = rows[0];
-    console.log('User retrieved from database:', user);
-
-    if (!user || !await bcrypt.compare(password, user.password)) {
-      console.log('Invalid credentials');
-      return res.status(401).json({ error: 'Invalid credentials' });
+        res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
     }
-
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log('Generated JWT token:', token);
-
-    res.cookie('token', token, { httpOnly: true });
-    req.session.token = token;
-    res.json({ message: 'Logged in successfully' });
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
 };
 
-exports.logout = (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to log out' });
-      }
-      res.clearCookie('connect.sid');
-      res.json({ message: 'Logged out successfully' });
-    });
-  };
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User does not exist" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        const otp = generateOtp();
+        user.otp = otp;
+        user.otpExpiration = Date.now() + 3600000; // OTP valid for 1 hour
+        await user.save();
+
+        await sendOtp(email, otp);
+
+        res.status(200).json({ message: "OTP sent to email" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User does not exist" });
+        }
+
+        if (user.otp !== otp || user.otpExpiration < Date.now()) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        user.otp = undefined;
+        user.otpExpiration = undefined;
+        await user.save();
+
+        res.status(200).json({ token });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const logout = (req, res) => {
+    res.status(200).json({ message: "Logged out successfully" });
+};
