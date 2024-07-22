@@ -4,10 +4,10 @@ import connecttodb from "./configs/db.js";
 import authRoutes from "./routes/authroute.js";
 import bodyParser from "body-parser";
 import cors from "cors"
-
+// {origin:process.env.FRONTEND_URL,credentials: true}
 config();
 const app = express();
-app.use(cors({origin:process.env.FRONTEND_URL,credentials: true}));
+app.use(cors());
 const port = process.env.PORT || 8080;
 const url = process.env.DB_URL;
 

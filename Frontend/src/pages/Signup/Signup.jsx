@@ -1,19 +1,37 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 export const Signup = () => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
 
-  const handleSendOtp = () => {
-    // Placeholder function for sending OTP
-    console.log(`Sending OTP to ${email}`);
-    // You would integrate your OTP sending logic here
+  const handleSendOtp = async () => {
+    try {
+      await axios.post('http://localhost:9090/api/auth/verify-otp', { email , otp});
+      console.log(`Sending OTP to ${email}`);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post('http://localhost:9090/api/auth/signup', { username, email, password });
+      console.log('Signup successful');
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-800 via-gray-900 to-black flex items-center justify-center p-6 mt-3">
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">Sign Up</h2>
-        <form>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
               Username
@@ -23,6 +41,8 @@ export const Signup = () => {
               id="username"
               name="username"
               placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -44,7 +64,7 @@ export const Signup = () => {
             />
           </div>
 
-          <div className="mb-4 flex items-center">
+          {/* <div className="mb-4 flex items-center">
             <label htmlFor="otp" className="block text-gray-700 text-sm font-bold mb-2 mr-4">
               OTP
             </label>
@@ -53,6 +73,8 @@ export const Signup = () => {
               id="otp"
               name="otp"
               placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
               className="flex-grow px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -63,7 +85,7 @@ export const Signup = () => {
             >
               Send OTP
             </button>
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
@@ -74,6 +96,8 @@ export const Signup = () => {
               id="password"
               name="password"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -88,18 +112,6 @@ export const Signup = () => {
             </button>
           </div>
         </form>
-        <div className="mt-4">
-          <button
-            onClick={() => {
-              // Logic to handle logout
-              console.log("Logging out...");
-              // You would integrate your logout logic here
-            }}
-            className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );

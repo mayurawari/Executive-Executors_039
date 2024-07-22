@@ -13,7 +13,12 @@ export const signup = async (req, res) => {
         }
 
         user = new User({ username, email, password });
+        const otp = generateOtp();
+        user.otp = otp;
+        user.otpExpiration = Date.now() + 3600000; // OTP valid for 1 hour
         await user.save();
+
+        await sendOtp(email, otp);
 
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
@@ -22,7 +27,7 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, otp } = req.body;
 
     try {
         const user = await User.findOne({ email });
@@ -35,14 +40,19 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        const otp = generateOtp();
-        user.otp = otp;
-        user.otpExpiration = Date.now() + 3600000; // OTP valid for 1 hour
+        // Verify OTP
+        if (user.otp !== otp || user.otpExpiration < Date.now()) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        // OTP verification successful
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        user.otp = undefined;
+        user.otpExpiration = undefined;
         await user.save();
 
-        await sendOtp(email, otp);
-
-        res.status(200).json({ message: "OTP sent to email" });
+        res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
