@@ -1,3 +1,7 @@
-body{
-    height: 100%;
-}
+@media screen and (max-width: 500px) {
+    
+    :root{
+       height: 160vh;
+    }
+
+ }
