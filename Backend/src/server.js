@@ -1,7 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import connecttodb from "./configs/db.js";
-import authRoutes from "./routes/authroute.js";
+import Router from "./routes/authroute.js";
 import bodyParser from "body-parser";
 import cors from "cors"
 // {origin:process.env.FRONTEND_URL,credentials: true}
@@ -13,7 +13,7 @@ const url = process.env.DB_URL;
 
 app.use(bodyParser.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", Router);
 
 app.get("/", (req, res) => {
     res.send("This is the home route");
